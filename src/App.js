@@ -1,23 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import WeatherSearch from "./components/CitySearch";
+import WeatherDisplay from "./components/DisplayWeather";
+import "./App.css";
 
 function App() {
+  const [city, setCity] = useState("Toronto");
+  const [weather, setWeather] = useState(null);
+
+  useEffect(() => {
+    fetch(
+      `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=7eae72c6811f0905a633c9f4c7bc3923&units=metric`
+    )
+      .then((res) => res.json())
+      .then((data) => setWeather(data));
+  }, [city]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app-container">
+      <WeatherSearch setCity={setCity} />
+      <h1>Todays Forecast</h1>
+      {weather && <WeatherDisplay weather={weather} />}
     </div>
   );
 }
